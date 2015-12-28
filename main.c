@@ -26,7 +26,7 @@ int initializeFramebuffer(const char *fbf){
 	screensize = vinfo.xres * vinfo.yres * (vinfo.bits_per_pixel / 8);
 
 	fbp = (char*)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
-	if((int)fbp == -1)
+	if(fbp == NULL)
 		return 4;
 
 	//create back buffer
