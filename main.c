@@ -12,7 +12,7 @@ int fbfd = 0;
 struct fb_var_screeninfo vinfo;
 struct fb_fix_screeninfo finfo;
 long int screensize = 0;
-char *fbp = 0;
+char *fbp = 0, *bbf = 0;
 
 int initializeFramebuffer(const char *fbf){
 	fbfd = open(fbf, O_RDWR);
@@ -28,6 +28,10 @@ int initializeFramebuffer(const char *fbf){
 	fbp = (char*)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
 	if((int)fbp == -1)
 		return 4;
+
+	//create back buffer
+	bbf = (char*)malloc(screensize);
+	
 	return 0;
 }
 
@@ -58,13 +62,27 @@ int main(int argc, char **argv){
  	* 		setPixel(fbp,location,r,g,b,&vinfo,&vinfo);
  	*	to do it!
 	*/
-	clearBufferColor(fbp, 128, 128, 128, 128,&vinfo,&finfo);
-	if(drawImage(fbp, 10, 10, img, &vinfo, &finfo)!=0){
-		fprintf(stderr, "Failed to load image.\n");
-		return 5;
+	char done = 0;
+	int x = 0;
+	while(done==0){
+		x += 20;
+		clearBufferColor(bbf, 128, 128, 128, 128,&vinfo,&finfo);
+		drawImage(bbf, x, 10, img, &vinfo, &finfo);
+
+		//SWAP!
+		memcpy(fbp, bbf, screensize);
+		if(x > 1000)
+			done = 1;
 	}
 
 	munmap(fbp, screensize);
 	close(fbfd);
 	return 0;
 }
+
+
+
+
+
+
+
