@@ -40,6 +40,7 @@ int main(int argc, char **argv){
 	const char *img = NULL;
 	if(argc == 2){
 		img = argv[1];
+		fbf = "/dev/fb1";
 	}else if(argc == 3){
 		fbf = argv[1];
 		img = argv[2];
@@ -48,7 +49,7 @@ int main(int argc, char **argv){
 		return 0;
 	}
 
-	int res = initializeFramebuffer("/dev/fb1");
+	int res = initializeFramebuffer(fbf);
 	if(res!=0){
 		fprintf(stderr, "Error initializing framebuffer! code: %i\n", res);
 		return res;
@@ -56,11 +57,18 @@ int main(int argc, char **argv){
 
 	char done = 0;
 	int x = 0;
+
+	int iw,ih,cmp;
+	unsigned char *image = stbi_load(img, &iw, &ih, &cmp, 4);
+	if(image == NULL){
+		fprintf(stderr, "Failed to load image %c\n", img);
+		return 1;
+	}
 	while(done==0){
 		x += 20;
 		clearBuffer(bbf, screensize);
 		//clearBufferColor(bbf, 128,128,128,128,&vinfo,&finfo);
-		drawImage(bbf, x, 10, img, &vinfo, &finfo);
+		drawImage(bbf, x, 10, image, iw, ih, &vinfo, &finfo);
 
 		//SWAP!
 		memcpy(fbp, bbf, screensize);

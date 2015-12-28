@@ -35,16 +35,18 @@ void setPixel(	char *fbp,
 	}
 }
 
-int drawImage(char *fbp, int x, int y, const char *filename,
+int drawImage(char *fbp, int x, int y,
+		unsigned char *data,
+		int width,
+		int height,
 		struct fb_var_screeninfo *v,
 		struct fb_fix_screeninfo *f){
-	int width, height, comp;
-	unsigned char *data = stbi_load(filename, &width, &height, &comp, 0);
-	if(data == NULL){
+
+	if(data == NULL)
 		return 1;
-	}
-	int linesize = width*comp;
+	int linesize = width*4;
 	int loc,ry;
+
 	for(ry=0; ry<height; ry++){
 		loc = getLocation(x,ry,v,f);
 		memcpy(fbp+loc, data+(linesize*ry), linesize);
