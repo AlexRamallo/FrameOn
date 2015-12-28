@@ -70,7 +70,7 @@ int main(int argc, char **argv){
 		//clearBufferColor(bbf, 128,128,128,128,&vinfo,&finfo);
 		drawImage(bbf, x, 10, image, iw, ih, &vinfo, &finfo);
 
-		//SWAP		
+		//SWAP!		
 		memcpy(fbp, bbf, screensize);
 		if(x > 1000)
 			done = 1;
