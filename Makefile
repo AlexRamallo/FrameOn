@@ -1,6 +1,6 @@
 release:
-	gcc main.c -lm -ofb;
+	gcc main.c -lm -ofb.bin;
 run: release
-	./fb
+	./fb.bin
 clean:
-	rm fb;
+	rm fb.bin;
