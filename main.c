@@ -54,19 +54,12 @@ int main(int argc, char **argv){
 		return res;
 	}
 
-	/**
- 	*	READY TO START WRITING TO FRAMEBUFFER
- 	* 	use:
- 	* 		getLocation(x, y, &vinfo, &yinfo);
- 	* 	with:
- 	* 		setPixel(fbp,location,r,g,b,&vinfo,&vinfo);
- 	*	to do it!
-	*/
 	char done = 0;
 	int x = 0;
 	while(done==0){
 		x += 20;
-		clearBufferColor(bbf, 128, 128, 128, 128,&vinfo,&finfo);
+		clearBuffer(bbf, screensize);
+		//clearBufferColor(bbf, 128,128,128,128,&vinfo,&finfo);
 		drawImage(bbf, x, 10, img, &vinfo, &finfo);
 
 		//SWAP!

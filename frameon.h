@@ -39,31 +39,16 @@ int drawImage(char *fbp, int x, int y, const char *filename,
 		struct fb_var_screeninfo *v,
 		struct fb_fix_screeninfo *f){
 	int width, height, comp;
-	unsigned char *data = stbi_load(filename, &width, &height, &comp, 3);
+	unsigned char *data = stbi_load(filename, &width, &height, &comp, 0);
 	if(data == NULL){
 		return 1;
 	}
-	//fprintf(stdout, "actual comp#: %i\n", comp);
-	int dx = 0, dy = 0;
-	int *readbuf = (int*)malloc(sizeof(int)*4);
-	for(dy = 0; dy<height; dy++)
-		for(dx = 0; dx<width; dx++){
-			int loc = getLocation(x+dx,y+dy,v,f);
-			int ploc = (width * comp * dy) + (dx * comp);
-			int i;
-			for(i = 0; i<4; i++)
-				if(i<comp)
-					readbuf[i] = *(data+ploc+i);
-				else
-					readbuf[i] = 0;
-
-			setPixel(fbp,loc,
-				readbuf[0],
-				readbuf[1],
-				readbuf[2],
-				readbuf[3],
-				v,f);
-		}
+	int linesize = width*comp;
+	int loc,ry;
+	for(ry=0; ry<height; ry++){
+		loc = getLocation(x,ry,v,f);
+		memcpy(fbp+loc, data+(linesize*ry), linesize);
+	}
 	return 0;
 }
 void clearBufferColor(	char *fbp,
@@ -79,9 +64,8 @@ void clearBufferColor(	char *fbp,
 		}
 }
 void clearBuffer(	char *fbp,
-			struct fb_var_screeninfo *v,
-			struct fb_fix_screeninfo *f){
-	clearBufferColor(fbp,0,0,0,0,v,f);
+			int screensize){
+	memset(fbp, 0, screensize);
 }
 #endif
 
