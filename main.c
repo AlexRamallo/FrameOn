@@ -55,9 +55,10 @@ int main(int argc, char **argv){
  	* 	use:
  	* 		getLocation(x, y, &vinfo, &yinfo);
  	* 	with:
- 	* 		setPixel(fbp,location,r,g,b,&vinfo,&yinfo);
+ 	* 		setPixel(fbp,location,r,g,b,&vinfo,&vinfo);
  	*	to do it!
 	*/
+	clearBufferColor(fbp, 128, 128, 128, 128,&vinfo,&finfo);
 	if(drawImage(fbp, 10, 10, img, &vinfo, &finfo)!=0){
 		fprintf(stderr, "Failed to load image.\n");
 		return 5;
