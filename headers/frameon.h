@@ -36,6 +36,13 @@ void frameon_sp_16bpp(long int,int,int,int,int);
 void frameon_sp_32bpp(long int,int,int,int,int);
 void frameon_sp_24bpp(long int,int,int,int,int);
 
+//Simple representation of images
+typedef struct {
+	char *data;
+	int width;
+	int height;
+} foImage;
+
 /**
  * Loads and initializes the specified framebuffer
  *
@@ -66,10 +73,7 @@ frameon_setpixelwbd frameon_setPixel;
  * data is the raw image data (probably from stbi_load)
  * width and height are the dimensions of the image data
  * */
-int frameon_drawImage(	int x, int y,
-			unsigned char *data,
-			int width,
-			int height);
+int frameon_drawImage(	int x, int y, foImage *img);
 
 /**
  * Clear the framebuffer to a set color
