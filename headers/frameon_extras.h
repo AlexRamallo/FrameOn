@@ -16,6 +16,9 @@ foImage *imgLoad(const char *file){
 	return i;
 }
 
+/**
+ * Will clean up an image by freeing it and its data
+ * */
 void cleanUpImage(foImage *img){
 	free(img->data);
 	free(img);
