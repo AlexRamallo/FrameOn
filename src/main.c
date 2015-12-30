@@ -1,8 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "frameon.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "frameon_extras.h"
 #define true 1
 #define false 0
 
@@ -22,24 +21,24 @@ int main(int argc, char **argv){
 
 	int res = loadFramebuffer(fbf, false);
 	if(res!=0){
-		fprintf(stderr, "Error initializing framebuffer! code: %i\n", res);
+		fprintf(stderr,"Framebuffer init failure code: %i\n",res);
 		return res;
 	}
 
 	char done = 0;
 	int x = 0;
 
-	int iw,ih,cmp;
-	unsigned char *image = stbi_load(img, &iw, &ih, &cmp, 4);
+	foImage *image = imgLoad(img);
 	if(image == NULL){
 		fprintf(stderr, "Failed to load image %c\n", img);
 		return 1;
 	}
+	convert_swapRedBlue(image);
 	while(done==0){
 		x += 20;
 
 		clearBuffer();
-		drawImage(x, 100, image, iw, ih);	
+		drawImage(x, 100, image);
 		swapBuffer();
 
 		if(x > 1000)
