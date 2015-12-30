@@ -44,6 +44,7 @@ int main(int argc, char **argv){
 		if(x > 1000)
 			done = 1;
 	}
+	cleanUpImage(image);
 	cleanUpBuffers();
 	return 0;
 }

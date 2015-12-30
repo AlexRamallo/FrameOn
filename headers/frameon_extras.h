@@ -16,6 +16,11 @@ foImage *imgLoad(const char *file){
 	return i;
 }
 
+void cleanUpImage(foImage *img){
+	free(img->data);
+	free(img);
+}
+
 /**
  * Swaps the values of red and blue pixels in an image
  * */
