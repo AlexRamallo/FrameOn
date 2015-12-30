@@ -19,7 +19,7 @@ int main(int argc, char **argv){
 		return 0;
 	}
 
-	int res = loadFramebuffer(fbf, false);
+	int res = loadFramebuffer(fbf, true);
 	if(res!=0){
 		fprintf(stderr,"Framebuffer init failure code: %i\n",res);
 		return res;
