@@ -63,14 +63,24 @@ long int frameon_getLocation(int x,int y){
 		+ (y+frameon_vinfo.yoffset) * frameon_finfo.line_length;
 }
 
-int frameon_drawImage(	int x, int y, foImage *img){
+int frameon_drawImage(int x, int y, foImage *img, char clip){
 	if(img == NULL)
 		return 1;
-	int linesize = img->width*4;
+	int hclip = img->height;
+	if(clip == 1 && hclip+y>frameon_vinfo.yres)
+		hclip = frameon_vinfo.yres - y;
+	int wclip = img->width;
+	if(clip == 1 && wclip+x>frameon_vinfo.xres)
+		wclip = frameon_vinfo.xres - x;
+
+	int linesize = wclip*4;
 	int loc,ry;
-	for(ry=0; ry<img->height; ry++){
+	for(ry=0; ry<hclip; ry++){
 		loc = getLocation(x,y+ry);
-		memcpy(frameon_tbuf+loc, img->data+(linesize*ry), linesize);
+
+		memcpy(	frameon_tbuf+loc,
+			img->data+(img->width*4*ry),
+			linesize);
 	}
 	return 0;
 }

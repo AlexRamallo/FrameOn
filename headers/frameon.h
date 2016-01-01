@@ -72,8 +72,11 @@ frameon_setpixelwbd frameon_setPixel;
  *
  * data is the raw image data (probably from stbi_load)
  * width and height are the dimensions of the image data
+ *
+ * if clip is '1', image data will be 'clipped' to fit in
+ * screen bounds, otherwise it will be copied as-is
  * */
-int frameon_drawImage(	int x, int y, foImage *img);
+int frameon_drawImage(int x, int y, foImage *img, char clip);
 
 /**
  * Clear the framebuffer to a set color

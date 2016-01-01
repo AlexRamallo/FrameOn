@@ -38,10 +38,10 @@ int main(int argc, char **argv){
 		x += 20;
 
 		clearBuffer();
-		drawImage(x, 100, image);
+		drawImage(x,x, image, true);
 		swapBuffer();
 
-		if(x > 1000)
+		if(x > 3200)
 			done = 1;
 	}
 	cleanUpImage(image);
