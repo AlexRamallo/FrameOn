@@ -29,12 +29,14 @@ int main(int argc, char **argv){
 
 	error = FT_Set_Char_Size(
 					face,
-					0,
+					128*64,
 					64*64,
 					0,
-					128);
+					300);
 	
-	int a = FT_Get_Char_Index(face, '&');
+	//error = FT_Set_Pixel_Sizes(face, 64,32);
+
+	int a = FT_Get_Char_Index(face, 'A');
 
 	error = FT_Load_Glyph(
 			face,
@@ -56,9 +58,21 @@ int main(int argc, char **argv){
 	
 	FT_Bitmap bmp = face->glyph->bitmap;
 	foImage c;
-	c.data = bmp.buffer;
+	c.data = (char*)malloc(bmp.width*bmp.rows*4);
 	c.width = bmp.width;
 	c.height = bmp.rows;
+
+	int x,y;
+	for(x=0; x<c.width; x+=4){
+		for(y=0; y<c.height; y++){
+			c.data[x + (c.width*4 * y)] = bmp.buffer[x+(c.width*y)];
+			c.data[x + (c.width*4 * y)+1] = bmp.buffer[x+(c.width*y)];
+			c.data[x + (c.width*4 * y)+2] = bmp.buffer[x+(c.width*y)];
+			c.data[x + (c.width*4 * y)+3] = 0;
+		}
+	}
+
+	fprintf(stdout, "glyp width: %i, height: %i\n",bmp.width,bmp.rows);
 
 	fprintf(stdout, "cw: %i, ch: %i\n", c.width, c.height);
 	
@@ -75,7 +89,7 @@ int main(int argc, char **argv){
 		return 0;
 	}
 
-	int res = loadFramebuffer(fbf, true);
+	int res = loadFramebuffer(fbf, false);
 	if(res!=0){
 		fprintf(stderr,"Framebuffer init failure code: %i\n",res);
 		return res;
@@ -87,27 +101,8 @@ int main(int argc, char **argv){
 				frameon_vinfo.xres_virtual,
 				frameon_vinfo.yres_virtual);	
 	
-
-	char done = 0;
-	int x = 0;
-
-	foImage *image = imgLoad(img);
-	if(image == NULL){
-		fprintf(stderr, "Failed to load image %c\n", img);
-		return 1;
-	}
-	convert_swapRedBlue(image);
-	while(done == false){
-		x += 1;
-		clearBuffer();
-		drawImage(x, 100, &c, true);
-		swapBuffer();
-		if(x >= SCREENWIDTH - image->width)
-			done = true;
-	}
-	//sleep(10000);
-
-	cleanUpImage(image);
+	drawImage(20, 20, &c, true);
+	//cleanUpImage(c);
 	cleanUpBuffers();
 	return 0;
 }
