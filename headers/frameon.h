@@ -1,7 +1,7 @@
 #ifndef __FRAME_ON___H_
 #define __FRAME_ON___H_
 #include <linux/fb.h>
-
+#include <sys/types.h>
 #define loadFramebuffer frameon_loadFramebuffer
 #define getLocation frameon_getLocation
 #define setPixel frameon_setPixel
@@ -11,19 +11,28 @@
 #define swapBuffer frameon_swapBuffer
 #define cleanUpBuffers frameon_cleanUp
 
+#define SCREENWIDTH frameon_vinfo.xres
+#define SCREENHEIGHT frameon_vinfo.yres
+
+
+typedef __u32 fu32;
+typedef __u16 fu16;
+typedef __u8 fu8;
+typedef unsigned char fu4;
+
 //Framebuffer data
 int frameon_fbfd;
 struct fb_var_screeninfo frameon_vinfo;
 struct fb_fix_screeninfo frameon_finfo;
-long int frameon_screensize;
-int frameon_bytes_per_pixel;
+fu32 frameon_screensize;
+fu32 frameon_bytes_per_pixel;
 //Pointer to mmap'd framebuffer data
-char *frameon_fbp;
+fu4 *frameon_fbp;
 //Pointer to back buffer (if used)
-char *frameon_bbp;
+fu4 *frameon_bbp;
 char frameon_usebb;
-//Target buffer
-char *frameon_tbuf;
+//Render-target buffer
+fu4 *frameon_tbuf;
 
 typedef void (*frameon_setpixelwbd)(
 				long int location,
@@ -38,7 +47,7 @@ void frameon_sp_24bpp(long int,int,int,int,int);
 
 //Simple representation of images
 typedef struct {
-	char *data;
+	fu4 *data;
 	int width;
 	int height;
 } foImage;
@@ -50,6 +59,11 @@ typedef struct {
  * framebuffer device (e.g. /dev/fb0)
  * */
 int frameon_loadFramebuffer(const char *fbuf, char usebb);
+int frameon_putvinfo(struct fb_var_screeninfo *);
+int frameon_updateFBInfo(char);
+int frameon_setScreenResolution(int,int);
+int frameon_setVirtualResolution(int, int);
+
 
 /**
  * Get the location of a pixel in the framebuffer

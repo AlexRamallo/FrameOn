@@ -1,0 +1,2 @@
+gcc -c src/frameon.c -I./headers -o bin/frameon.o;
+ar rcs lib/libframeon.a bin/frameon.o;
